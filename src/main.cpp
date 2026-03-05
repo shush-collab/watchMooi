@@ -141,6 +141,9 @@ int main(int argc, char *argv[]) {
     // Run the mpv event loop (blocks until window is closed)
     player.runLoop();
 
+    // Clean shutdown: stop listeners + leave room
+    sync.stop();
+
     std::cout << "Goodbye!\n";
   } catch (const std::exception &e) {
     std::cerr << "Fatal error: " << e.what() << "\n";

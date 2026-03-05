@@ -21,11 +21,13 @@
 #include "../src/interfaces.h"
 #include "../src/sync.h"
 
+#include <algorithm>
 #include <atomic>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <random>
+#include <set>
 #include <string>
 #include <thread>
 #include <vector>
@@ -98,6 +100,23 @@ public:
                 const std::string &userId) override {
     rooms_[roomCode].push_back(userId);
     joinLog_.push_back({roomCode, userId});
+    // Notify user listeners
+    if (userListeners_.count(roomCode)) {
+      userListeners_[roomCode]({userId, true});
+    }
+    return true;
+  }
+
+  bool leaveRoom(const std::string &roomCode,
+                 const std::string &userId) override {
+    leaveLog_.push_back({roomCode, userId});
+    // Remove from rooms
+    auto &users = rooms_[roomCode];
+    users.erase(std::remove(users.begin(), users.end(), userId), users.end());
+    // Notify user listeners
+    if (userListeners_.count(roomCode)) {
+      userListeners_[roomCode]({userId, false});
+    }
     return true;
   }
 
@@ -124,7 +143,16 @@ public:
     listenRoomCodes_.push_back(roomCode);
   }
 
-  void stopListening() override { listeners_.clear(); }
+  void listenForUserChanges(const std::string &roomCode,
+                            UserCallback cb) override {
+    userListeners_[roomCode] = cb;
+  }
+
+  void stopListening() override {
+    listeners_.clear();
+    userListeners_.clear();
+    stopListeningCalled_ = true;
+  }
 
   // ── Test helpers ────────────────────────────────────────────────────────
 
@@ -133,6 +161,13 @@ public:
                            const PlaybackState &state) {
     if (listeners_.count(roomCode)) {
       listeners_[roomCode](state);
+    }
+  }
+
+  // Simulate a user join/leave event
+  void simulateUserEvent(const std::string &roomCode, const UserEvent &event) {
+    if (userListeners_.count(roomCode)) {
+      userListeners_[roomCode](event);
     }
   }
 
@@ -149,9 +184,12 @@ public:
   std::map<std::string, std::vector<std::string>> rooms_;
   std::map<std::string, PlaybackState> states_;
   std::map<std::string, StateCallback> listeners_;
+  std::map<std::string, UserCallback> userListeners_;
   std::vector<JoinEntry> joinLog_;
+  std::vector<JoinEntry> leaveLog_;
   std::vector<WriteEntry> writeLog_;
   std::vector<std::string> listenRoomCodes_;
+  bool stopListeningCalled_ = false;
 };
 
 // ============================================================================
@@ -973,6 +1011,115 @@ TEST(ConfigTest, EmptyConfigFileReturnsEmpty) {
 TEST(ConfigTest, MissingConfigFileHandled) {
   std::ifstream file("/tmp/this_config_does_not_exist.conf");
   EXPECT_FALSE(file.is_open());
+}
+
+// ============================================================================
+// User presence / leave notification tests
+// ============================================================================
+
+class UserPresenceTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    player_ = std::make_unique<MockPlayer>();
+    firebase_ = std::make_unique<MockFirebase>();
+    sync_ = std::make_unique<Sync>(*player_, *firebase_, "PRESENCE_ROOM", "me");
+    sync_->start();
+  }
+
+  std::unique_ptr<MockPlayer> player_;
+  std::unique_ptr<MockFirebase> firebase_;
+  std::unique_ptr<Sync> sync_;
+};
+
+TEST_F(UserPresenceTest, OtherUserLeavePausesPlayback) {
+  // Start playing
+  player_->playing_ = true;
+
+  // Simulate partner leaving
+  sync_->handleUserEvent({"partner", false});
+
+  // Playback should be paused
+  EXPECT_FALSE(player_->playing_);
+  // Suppress should have been called
+  EXPECT_GE(player_->suppressCount_, 1);
+}
+
+TEST_F(UserPresenceTest, OtherUserLeaveWhilePausedDoesNotCrash) {
+  player_->playing_ = false;
+
+  // Should not crash or do anything weird
+  sync_->handleUserEvent({"partner", false});
+
+  EXPECT_FALSE(player_->playing_);
+}
+
+TEST_F(UserPresenceTest, OtherUserJoinDoesNotAffectPlayback) {
+  player_->playing_ = false;
+  player_->actionLog_.clear();
+
+  sync_->handleUserEvent({"partner", true});
+
+  // No playback actions should have occurred
+  EXPECT_TRUE(player_->actionLog_.empty());
+  EXPECT_FALSE(player_->playing_);
+}
+
+TEST_F(UserPresenceTest, OwnEventsAreIgnored) {
+  player_->playing_ = true;
+  player_->actionLog_.clear();
+
+  // Our own leave event — should be ignored
+  sync_->handleUserEvent({"me", false});
+
+  EXPECT_TRUE(player_->playing_); // still playing
+  EXPECT_TRUE(player_->actionLog_.empty());
+}
+
+TEST_F(UserPresenceTest, StopCallsLeaveRoomAndStopListening) {
+  sync_->stop();
+
+  // leaveRoom should have been called
+  ASSERT_FALSE(firebase_->leaveLog_.empty());
+  EXPECT_EQ(firebase_->leaveLog_.back().roomCode, "PRESENCE_ROOM");
+  EXPECT_EQ(firebase_->leaveLog_.back().userId, "me");
+
+  // stopListening should have been called
+  EXPECT_TRUE(firebase_->stopListeningCalled_);
+}
+
+TEST(UserPresenceStandaloneTest, LeaveRoomRemovesUserFromMock) {
+  MockFirebase firebase;
+  firebase.joinRoom("ROOM1", "alice");
+  firebase.joinRoom("ROOM1", "bob");
+  EXPECT_EQ(firebase.rooms_["ROOM1"].size(), 2u);
+
+  firebase.leaveRoom("ROOM1", "alice");
+  EXPECT_EQ(firebase.rooms_["ROOM1"].size(), 1u);
+  EXPECT_EQ(firebase.rooms_["ROOM1"][0], "bob");
+}
+
+TEST(UserPresenceStandaloneTest, MultipleJoinLeaveSequence) {
+  MockFirebase firebase;
+  MockPlayer player;
+  Sync sync(player, firebase, "SEQ_ROOM", "user1");
+  sync.start();
+
+  // user2 joins
+  sync.handleUserEvent({"user2", true});
+  // user3 joins
+  sync.handleUserEvent({"user3", true});
+
+  // user2 leaves while playing
+  player.playing_ = true;
+  sync.handleUserEvent({"user2", false});
+  EXPECT_FALSE(player.playing_); // paused
+
+  // user3 is still here, resume
+  player.playing_ = true;
+
+  // user3 leaves
+  sync.handleUserEvent({"user3", false});
+  EXPECT_FALSE(player.playing_); // paused again
 }
 
 // ============================================================================

@@ -34,7 +34,23 @@ void Sync::start() {
     handleRemoteUpdate(state);
   });
 
+  // Wire up user presence events
+  firebase_.listenForUserChanges(
+      roomCode_, [this](const UserEvent &event) { handleUserEvent(event); });
+
   std::cout << "[Sync] Sync started for room " << roomCode_ << "\n";
+}
+
+void Sync::stop() {
+  std::cout << "[Sync] Stopping sync...\n";
+
+  // Stop SSE listeners first so no more events arrive
+  firebase_.stopListening();
+
+  // Remove ourselves from the room
+  firebase_.leaveRoom(roomCode_, userId_);
+
+  std::cout << "[Sync] Sync stopped.\n";
 }
 
 void Sync::onLocalToggle(bool isPlaying, double positionSec) {
@@ -75,4 +91,22 @@ void Sync::handleRemoteUpdate(const PlaybackState &state) {
     player_.play();
   else
     player_.pause();
+}
+
+void Sync::handleUserEvent(const UserEvent &event) {
+  if (event.userId == userId_)
+    return; // ignore our own events
+
+  if (event.joined) {
+    std::cout << "\n🟢 " << event.userId << " joined the room\n";
+  } else {
+    std::cout << "\n🔴 " << event.userId << " left the room\n";
+
+    // Pause playback when the other user leaves
+    if (player_.isPlaying()) {
+      std::cout << "   ⏸  Pausing playback — your partner left.\n";
+      player_.suppressNextEvent();
+      player_.pause();
+    }
+  }
 }

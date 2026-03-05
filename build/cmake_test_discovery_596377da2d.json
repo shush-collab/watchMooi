@@ -1,5 +1,5 @@
 {
-  "tests": 51,
+  "tests": 58,
   "name": "AllTests",
   "testsuites": [
     {
@@ -9,32 +9,32 @@
         {
           "name": "User1PlaysAndUser2Receives",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 180
+          "line": 218
         },
         {
           "name": "User1PausesAndUser2Receives",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 192
+          "line": 230
         },
         {
           "name": "RemotePlayAppliedToLocalPlayer",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 205
+          "line": 243
         },
         {
           "name": "RemotePauseAppliedToLocalPlayer",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 219
+          "line": 257
         },
         {
           "name": "RapidToggleHandledCorrectly",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 235
+          "line": 273
         },
         {
           "name": "BothUsersCanControl",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 249
+          "line": 287
         }
       ]
     },
@@ -45,27 +45,27 @@
         {
           "name": "ExistingFileLoadsSuccessfully",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 275
+          "line": 313
         },
         {
           "name": "NonExistentFileFailsGracefully",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 289
+          "line": 327
         },
         {
           "name": "EmptyPathFails",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 295
+          "line": 333
         },
         {
           "name": "DirectoryPathFails",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 300
+          "line": 338
         },
         {
           "name": "BothUsersMustHaveSameFile",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 307
+          "line": 345
         }
       ]
     },
@@ -76,37 +76,37 @@
         {
           "name": "UsersJoinSameRoomWithSameCode",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 335
+          "line": 373
         },
         {
           "name": "DifferentCodesCreateDifferentRooms",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 344
+          "line": 382
         },
         {
           "name": "RoomCodeIsCaseSensitive",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 354
+          "line": 392
         },
         {
           "name": "WritesGoToCorrectRoom",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 363
+          "line": 401
         },
         {
           "name": "ListenerAttachesToCorrectRoom",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 382
+          "line": 420
         },
         {
           "name": "EmptyRoomCodeStillFunctions",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 400
+          "line": 438
         },
         {
           "name": "SpecialCharactersInRoomCode",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 406
+          "line": 444
         }
       ]
     },
@@ -117,37 +117,37 @@
         {
           "name": "PositionSyncsWhenDriftExceedsThreshold",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 433
+          "line": 471
         },
         {
           "name": "NoSeekWhenDriftWithinThreshold",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 456
+          "line": 494
         },
         {
           "name": "ExactThresholdBoundary",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 479
+          "line": 517
         },
         {
           "name": "JustOverThresholdSeeks",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 500
+          "line": 538
         },
         {
           "name": "BackwardSeekAlsoSyncs",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 521
+          "line": 559
         },
         {
           "name": "PositionIncludedInFirebaseWrite",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 537
+          "line": 575
         },
         {
           "name": "ZeroPositionSyncs",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 545
+          "line": 583
         }
       ]
     },
@@ -158,22 +158,22 @@
         {
           "name": "RoomStatesAreIsolated",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 569
+          "line": 607
         },
         {
           "name": "ListenersOnlyGetTheirRoomEvents",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 596
+          "line": 634
         },
         {
           "name": "UnknownRoomReturnsEmptyState",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 620
+          "line": 658
         },
         {
           "name": "StopListeningRemovesAllCallbacks",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 628
+          "line": 666
         }
       ]
     },
@@ -184,22 +184,22 @@
         {
           "name": "OwnUpdatesAreIgnored",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 660
+          "line": 698
         },
         {
           "name": "OtherUsersUpdatesAreApplied",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 676
+          "line": 714
         },
         {
           "name": "SuppressEventCalledOnRemoteUpdate",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 691
+          "line": 729
         },
         {
           "name": "MultipleRemoteUpdatesSuppressEachTime",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 707
+          "line": 745
         }
       ]
     },
@@ -210,17 +210,17 @@
         {
           "name": "DefaultValues",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 727
+          "line": 765
         },
         {
           "name": "FieldAssignment",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 735
+          "line": 773
         },
         {
           "name": "CopySemantics",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 748
+          "line": 786
         }
       ]
     },
@@ -231,17 +231,17 @@
         {
           "name": "AppliesExistingRoomState",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 777
+          "line": 815
         },
         {
           "name": "EmptyRoomStartsPaused",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 795
+          "line": 833
         },
         {
           "name": "SuppressesEventWhenApplyingInitialState",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 805
+          "line": 843
         }
       ]
     },
@@ -252,22 +252,22 @@
         {
           "name": "ManyUsersInOneRoom",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 826
+          "line": 864
         },
         {
           "name": "RapidFireStateUpdates",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 836
+          "line": 874
         },
         {
           "name": "ManyRoomsIndependent",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 850
+          "line": 888
         },
         {
           "name": "LargePositionValues",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 872
+          "line": 910
         }
       ]
     },
@@ -278,12 +278,12 @@
         {
           "name": "GeneratedIdsAreUnique",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 888
+          "line": 926
         },
         {
           "name": "GeneratedIdFormat",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 911
+          "line": 949
         }
       ]
     },
@@ -294,17 +294,64 @@
         {
           "name": "ValidConfigFileParses",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 933
+          "line": 971
         },
         {
           "name": "EmptyConfigFileReturnsEmpty",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 954
+          "line": 992
         },
         {
           "name": "MissingConfigFileHandled",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 973
+          "line": 1011
+        }
+      ]
+    },
+    {
+      "name": "UserPresenceTest",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "OtherUserLeavePausesPlayback",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1034
+        },
+        {
+          "name": "OtherUserLeaveWhilePausedDoesNotCrash",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1047
+        },
+        {
+          "name": "OtherUserJoinDoesNotAffectPlayback",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1056
+        },
+        {
+          "name": "OwnEventsAreIgnored",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1067
+        },
+        {
+          "name": "StopCallsLeaveRoomAndStopListening",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1078
+        }
+      ]
+    },
+    {
+      "name": "UserPresenceStandaloneTest",
+      "tests": 2,
+      "testsuite": [
+        {
+          "name": "LeaveRoomRemovesUserFromMock",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1090
+        },
+        {
+          "name": "MultipleJoinLeaveSequence",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 1101
         }
       ]
     },
@@ -315,17 +362,17 @@
         {
           "name": "DISABLED_WebRTCVideoStreamEstablished",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 982
+          "line": 1129
         },
         {
           "name": "DISABLED_ChatMessageDelivered",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 990
+          "line": 1137
         },
         {
           "name": "DISABLED_ForwardRewindSync",
           "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
-          "line": 998
+          "line": 1145
         }
       ]
     }

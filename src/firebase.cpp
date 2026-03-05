@@ -39,6 +39,16 @@ static size_t writeCallback(char *ptr, size_t size, size_t nmemb,
   return size * nmemb;
 }
 
+// ── cURL progress callback (used to abort SSE when stopListening is called) ─
+
+static int progressCallback(void *clientp, curl_off_t /*dltotal*/,
+                            curl_off_t /*dlnow*/, curl_off_t /*ultotal*/,
+                            curl_off_t /*ulnow*/) {
+  auto *listening = static_cast<std::atomic<bool> *>(clientp);
+  // Return non-zero to abort the transfer
+  return listening->load() ? 0 : 1;
+}
+
 // ── SSE streaming callback ─────────────────────────────────────────────────
 
 struct SSEContext {
@@ -68,14 +78,12 @@ static size_t sseCallback(char *ptr, size_t size, size_t nmemb,
 
     // SSE data lines look like:  data: {"path":"/","data":{...}}
     if (line.rfind("data: ", 0) == 0) {
-      std::string payload = line.substr(6);
-      if (payload == "null" || payload.empty())
-        continue;
+      std::string jsonStr = line.substr(6);
 
       try {
-        json j = json::parse(payload);
-        // Firebase SSE sends {"path":"/","data":{...}} or
-        // {"path":"/fieldName","data":value}
+        json j = json::parse(jsonStr);
+
+        // Firebase SSE wraps data in {"path":"/","data":{...}}
         json data;
         if (j.contains("data")) {
           data = j["data"];
@@ -89,6 +97,82 @@ static size_t sseCallback(char *ptr, size_t size, size_t nmemb,
         }
       } catch (const json::exception &e) {
         std::cerr << "[Firebase] SSE parse error: " << e.what() << "\n";
+      }
+    }
+  }
+
+  return bytes;
+}
+
+// ── SSE user-presence callback ──────────────────────────────────────────────
+
+struct UserSSEContext {
+  Firebase::UserCallback callback;
+  std::atomic<bool> *listening;
+  std::set<std::string> *knownUsers;
+  std::string buffer;
+};
+
+static size_t userSseCallback(char *ptr, size_t size, size_t nmemb,
+                              void *userdata) {
+  auto *ctx = static_cast<UserSSEContext *>(userdata);
+  if (!ctx->listening->load())
+    return 0;
+
+  size_t bytes = size * nmemb;
+  ctx->buffer.append(ptr, bytes);
+
+  size_t pos;
+  while ((pos = ctx->buffer.find('\n')) != std::string::npos) {
+    std::string line = ctx->buffer.substr(0, pos);
+    ctx->buffer.erase(0, pos + 1);
+
+    if (!line.empty() && line.back() == '\r')
+      line.pop_back();
+
+    if (line.rfind("data: ", 0) == 0) {
+      std::string jsonStr = line.substr(6);
+
+      try {
+        json j = json::parse(jsonStr);
+        json data;
+        if (j.contains("data")) {
+          data = j["data"];
+        } else {
+          data = j;
+        }
+
+        if (data.is_null()) {
+          // All users removed — everyone left
+          for (const auto &uid : *ctx->knownUsers) {
+            ctx->callback({uid, false});
+          }
+          ctx->knownUsers->clear();
+        } else if (data.is_object()) {
+          // Full user list — diff against known users
+          std::set<std::string> currentUsers;
+          for (auto &[uid, val] : data.items()) {
+            currentUsers.insert(uid);
+          }
+
+          // Detect joins
+          for (const auto &uid : currentUsers) {
+            if (ctx->knownUsers->find(uid) == ctx->knownUsers->end()) {
+              ctx->callback({uid, true});
+            }
+          }
+
+          // Detect leaves
+          for (const auto &uid : *ctx->knownUsers) {
+            if (currentUsers.find(uid) == currentUsers.end()) {
+              ctx->callback({uid, false});
+            }
+          }
+
+          *ctx->knownUsers = currentUsers;
+        }
+      } catch (const json::exception &e) {
+        std::cerr << "[Firebase] User SSE parse error: " << e.what() << "\n";
       }
     }
   }
@@ -118,24 +202,41 @@ bool Firebase::joinRoom(const std::string &roomCode,
                  .count();
 
   json body = {{"joinedAt", now}};
+
   std::string url =
       dbUrl_ + "/rooms/" + roomCode + "/users/" + userId + ".json";
   std::string response = httpPut(url, body.dump());
 
   if (response.empty()) {
-    std::cerr << "[Firebase] Failed to join room\n";
+    std::cerr << "[Firebase] Failed to join room " << roomCode << "\n";
     return false;
   }
+
   std::cout << "[Firebase] Joined room " << roomCode << " as " << userId
             << "\n";
   return true;
 }
 
+bool Firebase::leaveRoom(const std::string &roomCode,
+                         const std::string &userId) {
+  std::string url =
+      dbUrl_ + "/rooms/" + roomCode + "/users/" + userId + ".json";
+  std::string response = httpDelete(url);
+
+  if (response.empty()) {
+    std::cerr << "[Firebase] Failed to leave room " << roomCode << "\n";
+    return false;
+  }
+
+  std::cout << "[Firebase] Left room " << roomCode << " (" << userId << ")\n";
+  return true;
+}
+
 bool Firebase::writePlaybackState(const std::string &roomCode,
                                   const PlaybackState &state) {
+  json body = playbackStateToJson(state);
   std::string url = dbUrl_ + "/rooms/" + roomCode + "/playback.json";
-  std::string body = playbackStateToJson(state).dump();
-  std::string response = httpPut(url, body);
+  std::string response = httpPut(url, body.dump());
 
   if (response.empty()) {
     std::cerr << "[Firebase] Failed to write playback state\n";
@@ -184,11 +285,16 @@ void Firebase::listenForChanges(const std::string &roomCode, StateCallback cb) {
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, sseCallback);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ctx);
       curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-      // Firebase redirects SSE requests, so we need to follow
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
 
+      // Progress callback to abort when stopListening() is called
+      curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
+      curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &listening_);
+      curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
       CURLcode res = curl_easy_perform(curl);
-      if (res != CURLE_OK && listening_.load()) {
+      if (res != CURLE_OK && res != CURLE_ABORTED_BY_CALLBACK &&
+          listening_.load()) {
         std::cerr << "[Firebase] SSE connection lost: "
                   << curl_easy_strerror(res) << ". Reconnecting in 2s...\n";
       }
@@ -204,13 +310,79 @@ void Firebase::listenForChanges(const std::string &roomCode, StateCallback cb) {
   });
 }
 
+void Firebase::listenForUserChanges(const std::string &roomCode,
+                                    UserCallback cb) {
+  // Read initial user list
+  std::string initUrl = dbUrl_ + "/rooms/" + roomCode + "/users.json";
+  std::string initResp = httpGet(initUrl);
+  if (!initResp.empty() && initResp != "null") {
+    try {
+      json j = json::parse(initResp);
+      if (j.is_object()) {
+        for (auto &[uid, val] : j.items()) {
+          knownUsers_.insert(uid);
+        }
+      }
+    } catch (...) {
+    }
+  }
+
+  userListenerThread_ = std::thread([this, roomCode, cb]() {
+    std::string url = dbUrl_ + "/rooms/" + roomCode + "/users.json";
+
+    while (listening_.load()) {
+      CURL *curl = curl_easy_init();
+      if (!curl) {
+        std::cerr << "[Firebase] User SSE: curl_easy_init failed\n";
+        break;
+      }
+
+      UserSSEContext ctx;
+      ctx.callback = cb;
+      ctx.listening = &listening_;
+      ctx.knownUsers = &knownUsers_;
+
+      struct curl_slist *headers = nullptr;
+      headers = curl_slist_append(headers, "Accept: text/event-stream");
+
+      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, userSseCallback);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ctx);
+      curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+
+      // Progress callback to abort when stopListening() is called
+      curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
+      curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &listening_);
+      curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
+      CURLcode res = curl_easy_perform(curl);
+      if (res != CURLE_OK && res != CURLE_ABORTED_BY_CALLBACK &&
+          listening_.load()) {
+        std::cerr << "[Firebase] User SSE lost: " << curl_easy_strerror(res)
+                  << ". Reconnecting in 2s...\n";
+      }
+
+      curl_slist_free_all(headers);
+      curl_easy_cleanup(curl);
+
+      if (listening_.load()) {
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+      }
+    }
+  });
+}
+
 void Firebase::stopListening() {
   listening_ = false;
   if (listenerThread_.joinable())
     listenerThread_.join();
+  if (userListenerThread_.joinable())
+    userListenerThread_.join();
 }
 
-// ── Static HTTP helpers ─────────────────────────────────────────────────────
+// ── HTTP helpers ────────────────────────────────────────────────────────────
 
 std::string Firebase::httpPut(const std::string &url, const std::string &body) {
   CURL *curl = curl_easy_init();
@@ -228,6 +400,7 @@ std::string Firebase::httpPut(const std::string &url, const std::string &body) {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
   CURLcode res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
@@ -251,10 +424,35 @@ std::string Firebase::httpGet(const std::string &url) {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
   CURLcode res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
     std::cerr << "[Firebase] GET error: " << curl_easy_strerror(res) << "\n";
+    response.clear();
+  }
+
+  curl_easy_cleanup(curl);
+  return response;
+}
+
+std::string Firebase::httpDelete(const std::string &url) {
+  CURL *curl = curl_easy_init();
+  if (!curl)
+    return "";
+
+  std::string response;
+
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+  curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+
+  CURLcode res = curl_easy_perform(curl);
+  if (res != CURLE_OK) {
+    std::cerr << "[Firebase] DELETE error: " << curl_easy_strerror(res) << "\n";
     response.clear();
   }
 

@@ -17,6 +17,9 @@ Synchronized video playback for two people. Join a room by code, play a local vi
 - 🔑 Room codes — both users enter the same code to connect
 - 📍 Position sync — seeks to match if drift > 1 second
 - 🔒 Room isolation — each room is private
+- 🟢🔴 Join/leave notifications — see who enters or leaves
+- ⏸️ Auto-pause on leave — video pauses when your partner quits
+- 🚪 Clean exit — press Q to quit instantly, no hanging
 - 🖥️ Cross-platform C++17 codebase
 
 ---
@@ -243,14 +246,18 @@ cd build
 | Key     | Action                              |
 | ------- | ----------------------------------- |
 | `SPACE` | Play / Pause (synced to other user) |
-| `Q`     | Quit                                |
+| `Q`     | Quit (notifies other user)          |
 
 ### What happens
 
 1. Both users enter the same room code
 2. An mpv video window opens (starts paused)
-3. When **either user** presses SPACE → both players play/pause together
-4. If playback positions drift by more than 1 second, they auto-resync
+3. You see `🟢 user_xyz joined the room` when someone else connects
+4. When **either user** presses SPACE → both players play/pause together
+5. If playback positions drift by more than 1 second, they auto-resync
+6. When one user presses Q:
+   - Their video closes and they're removed from the room
+   - The other user sees `🔴 user_xyz left the room` and their video auto-pauses
 
 ---
 
@@ -265,8 +272,8 @@ make watchmooi_tests -j$(nproc)
 Expected output:
 
 ```
-[==========] 48 tests from 11 test suites ran.
-[  PASSED  ] 48 tests.
+[==========] 55 tests from 13 test suites ran.
+[  PASSED  ] 55 tests.
   YOU HAVE 3 DISABLED TESTS
 ```
 
@@ -328,6 +335,7 @@ watchMooi/
 - [ ] Auto-generated room codes
 - [ ] Video file hash verification (ensure both users have the same file)
 - [ ] Authentication (lock rooms to invited users)
+- [ ] Show current room member count in the UI
 
 ---
 

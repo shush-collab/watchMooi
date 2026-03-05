@@ -14,8 +14,14 @@ public:
   // Start listening for remote changes and hooking local events.
   void start();
 
+  // Clean shutdown: leave the room, stop listeners.
+  void stop();
+
   // Exposed for testing — simulate a remote update arriving.
   void handleRemoteUpdate(const PlaybackState &state);
+
+  // Exposed for testing — simulate a user join/leave event.
+  void handleUserEvent(const UserEvent &event);
 
 private:
   IPlayer &player_;

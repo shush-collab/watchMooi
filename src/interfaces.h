@@ -16,6 +16,13 @@ struct PlaybackState {
   // Declared here so tests can use them without pulling in firebase.h
 };
 
+// ── User presence event ─────────────────────────────────────────────────────
+
+struct UserEvent {
+  std::string userId;
+  bool joined; // true = joined, false = left
+};
+
 // ── Abstract interfaces for testability ─────────────────────────────────────
 
 class IPlayer {
@@ -38,15 +45,20 @@ public:
 class IFirebase {
 public:
   using StateCallback = std::function<void(const PlaybackState &)>;
+  using UserCallback = std::function<void(const UserEvent &)>;
 
   virtual ~IFirebase() = default;
 
   virtual bool joinRoom(const std::string &roomCode,
                         const std::string &userId) = 0;
+  virtual bool leaveRoom(const std::string &roomCode,
+                         const std::string &userId) = 0;
   virtual bool writePlaybackState(const std::string &roomCode,
                                   const PlaybackState &state) = 0;
   virtual PlaybackState readPlaybackState(const std::string &roomCode) = 0;
   virtual void listenForChanges(const std::string &roomCode,
                                 StateCallback cb) = 0;
+  virtual void listenForUserChanges(const std::string &roomCode,
+                                    UserCallback cb) = 0;
   virtual void stopListening() = 0;
 };
