@@ -1,0 +1,333 @@
+{
+  "tests": 51,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "PlayPauseSyncTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "User1PlaysAndUser2Receives",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 180
+        },
+        {
+          "name": "User1PausesAndUser2Receives",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 192
+        },
+        {
+          "name": "RemotePlayAppliedToLocalPlayer",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 205
+        },
+        {
+          "name": "RemotePauseAppliedToLocalPlayer",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 219
+        },
+        {
+          "name": "RapidToggleHandledCorrectly",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 235
+        },
+        {
+          "name": "BothUsersCanControl",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 249
+        }
+      ]
+    },
+    {
+      "name": "VideoExistenceTest",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "ExistingFileLoadsSuccessfully",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 275
+        },
+        {
+          "name": "NonExistentFileFailsGracefully",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 289
+        },
+        {
+          "name": "EmptyPathFails",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 295
+        },
+        {
+          "name": "DirectoryPathFails",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 300
+        },
+        {
+          "name": "BothUsersMustHaveSameFile",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 307
+        }
+      ]
+    },
+    {
+      "name": "RoomCodeTest",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "UsersJoinSameRoomWithSameCode",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 335
+        },
+        {
+          "name": "DifferentCodesCreateDifferentRooms",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 344
+        },
+        {
+          "name": "RoomCodeIsCaseSensitive",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 354
+        },
+        {
+          "name": "WritesGoToCorrectRoom",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 363
+        },
+        {
+          "name": "ListenerAttachesToCorrectRoom",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 382
+        },
+        {
+          "name": "EmptyRoomCodeStillFunctions",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 400
+        },
+        {
+          "name": "SpecialCharactersInRoomCode",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 406
+        }
+      ]
+    },
+    {
+      "name": "VideoSyncTest",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "PositionSyncsWhenDriftExceedsThreshold",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 433
+        },
+        {
+          "name": "NoSeekWhenDriftWithinThreshold",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 456
+        },
+        {
+          "name": "ExactThresholdBoundary",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 479
+        },
+        {
+          "name": "JustOverThresholdSeeks",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 500
+        },
+        {
+          "name": "BackwardSeekAlsoSyncs",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 521
+        },
+        {
+          "name": "PositionIncludedInFirebaseWrite",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 537
+        },
+        {
+          "name": "ZeroPositionSyncs",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 545
+        }
+      ]
+    },
+    {
+      "name": "PrivacyTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "RoomStatesAreIsolated",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 569
+        },
+        {
+          "name": "ListenersOnlyGetTheirRoomEvents",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 596
+        },
+        {
+          "name": "UnknownRoomReturnsEmptyState",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 620
+        },
+        {
+          "name": "StopListeningRemovesAllCallbacks",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 628
+        }
+      ]
+    },
+    {
+      "name": "EchoSuppressionTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "OwnUpdatesAreIgnored",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 660
+        },
+        {
+          "name": "OtherUsersUpdatesAreApplied",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 676
+        },
+        {
+          "name": "SuppressEventCalledOnRemoteUpdate",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 691
+        },
+        {
+          "name": "MultipleRemoteUpdatesSuppressEachTime",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 707
+        }
+      ]
+    },
+    {
+      "name": "PlaybackStateTest",
+      "tests": 3,
+      "testsuite": [
+        {
+          "name": "DefaultValues",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 727
+        },
+        {
+          "name": "FieldAssignment",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 735
+        },
+        {
+          "name": "CopySemantics",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 748
+        }
+      ]
+    },
+    {
+      "name": "InitialStateSyncTest",
+      "tests": 3,
+      "testsuite": [
+        {
+          "name": "AppliesExistingRoomState",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 777
+        },
+        {
+          "name": "EmptyRoomStartsPaused",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 795
+        },
+        {
+          "name": "SuppressesEventWhenApplyingInitialState",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 805
+        }
+      ]
+    },
+    {
+      "name": "StressTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "ManyUsersInOneRoom",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 826
+        },
+        {
+          "name": "RapidFireStateUpdates",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 836
+        },
+        {
+          "name": "ManyRoomsIndependent",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 850
+        },
+        {
+          "name": "LargePositionValues",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 872
+        }
+      ]
+    },
+    {
+      "name": "UserIdTest",
+      "tests": 2,
+      "testsuite": [
+        {
+          "name": "GeneratedIdsAreUnique",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 888
+        },
+        {
+          "name": "GeneratedIdFormat",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 911
+        }
+      ]
+    },
+    {
+      "name": "ConfigTest",
+      "tests": 3,
+      "testsuite": [
+        {
+          "name": "ValidConfigFileParses",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 933
+        },
+        {
+          "name": "EmptyConfigFileReturnsEmpty",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 954
+        },
+        {
+          "name": "MissingConfigFileHandled",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 973
+        }
+      ]
+    },
+    {
+      "name": "FutureFeaturesTest",
+      "tests": 3,
+      "testsuite": [
+        {
+          "name": "DISABLED_WebRTCVideoStreamEstablished",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 982
+        },
+        {
+          "name": "DISABLED_ChatMessageDelivered",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 990
+        },
+        {
+          "name": "DISABLED_ForwardRewindSync",
+          "file": "\/home\/fln\/Documents\/watchMooi\/tests\/tests.cpp",
+          "line": 998
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+if(EXISTS "/home/fln/Documents/watchMooi/build/watchmooi_tests[1]_tests.cmake")
+  include("/home/fln/Documents/watchMooi/build/watchmooi_tests[1]_tests.cmake")
+else()
+  add_test(watchmooi_tests_NOT_BUILT watchmooi_tests_NOT_BUILT)
+endif()
