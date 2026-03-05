@@ -970,19 +970,24 @@ TEST(UserIdTest, GeneratedIdFormat) {
 
 TEST(ConfigTest, ValidConfigFileParses) {
   std::string tmpConfig = "/tmp/watchmooi_test.conf";
-  std::ofstream ofs(tmpConfig);
-  ofs << "# comment line\n";
-  ofs << "firebase_url=https://myproject.firebaseio.com\n";
-  ofs.close();
+  {
+    std::ofstream ofs(tmpConfig);
+    ofs << "# comment line\n";
+    ofs << "firebase_url=https://myproject.firebaseio.com\n";
+    ofs.close();
+  }
 
   // Simulate the config loading logic
   std::string firebaseUrl;
-  std::ifstream file(tmpConfig);
-  std::string line;
-  while (std::getline(file, line)) {
-    if (line.rfind("firebase_url=", 0) == 0) {
-      firebaseUrl = line.substr(13);
+  {
+    std::ifstream file(tmpConfig);
+    std::string line;
+    while (std::getline(file, line)) {
+      if (line.rfind("firebase_url=", 0) == 0) {
+        firebaseUrl = line.substr(13);
+      }
     }
+    file.close();
   }
 
   EXPECT_EQ(firebaseUrl, "https://myproject.firebaseio.com");
@@ -991,17 +996,22 @@ TEST(ConfigTest, ValidConfigFileParses) {
 
 TEST(ConfigTest, EmptyConfigFileReturnsEmpty) {
   std::string tmpConfig = "/tmp/watchmooi_empty.conf";
-  std::ofstream ofs(tmpConfig);
-  ofs << "# only comments\n";
-  ofs.close();
+  {
+    std::ofstream ofs(tmpConfig);
+    ofs << "# only comments\n";
+    ofs.close();
+  }
 
   std::string firebaseUrl;
-  std::ifstream file(tmpConfig);
-  std::string line;
-  while (std::getline(file, line)) {
-    if (line.rfind("firebase_url=", 0) == 0) {
-      firebaseUrl = line.substr(13);
+  {
+    std::ifstream file(tmpConfig);
+    std::string line;
+    while (std::getline(file, line)) {
+      if (line.rfind("firebase_url=", 0) == 0) {
+        firebaseUrl = line.substr(13);
+      }
     }
+    file.close();
   }
 
   EXPECT_TRUE(firebaseUrl.empty());

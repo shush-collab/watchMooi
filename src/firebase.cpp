@@ -1,8 +1,53 @@
 #include "firebase.h"
 #include <chrono>
+#include <cstdlib>
 #include <cstring>
 #include <curl/curl.h>
+#include <filesystem>
 #include <iostream>
+
+// ── CA bundle auto-detection (needed on Windows/MSYS2) ─────────────────────
+
+static bool fileExists(const char *path) {
+  FILE *f = fopen(path, "r");
+  if (f) { fclose(f); return true; }
+  return false;
+}
+
+static std::string findCaBundlePath() {
+  // Check environment variable first
+  const char *envCa = std::getenv("CURL_CA_BUNDLE");
+  if (envCa && fileExists(envCa))
+    return envCa;
+  envCa = std::getenv("SSL_CERT_FILE");
+  if (envCa && fileExists(envCa))
+    return envCa;
+
+  // Common MSYS2 locations (both Windows and POSIX path formats)
+  const char *candidates[] = {
+      "C:\\msys64\\ucrt64\\etc\\ssl\\certs\\ca-bundle.crt",
+      "C:/msys64/ucrt64/etc/ssl/certs/ca-bundle.crt",
+      "C:\\msys64\\usr\\ssl\\certs\\ca-bundle.crt",
+      "C:/msys64/usr/ssl/certs/ca-bundle.crt",
+      "/ucrt64/etc/ssl/certs/ca-bundle.crt",
+      "/usr/ssl/certs/ca-bundle.crt",
+      "/etc/ssl/certs/ca-certificates.crt", // Linux
+  };
+  for (const auto *path : candidates) {
+    if (fileExists(path))
+      return path;
+  }
+  return ""; // let curl try its default
+}
+
+static const std::string CA_BUNDLE_PATH = findCaBundlePath();
+
+static void setCurlSSL(CURL *curl) {
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  if (!CA_BUNDLE_PATH.empty()) {
+    curl_easy_setopt(curl, CURLOPT_CAINFO, CA_BUNDLE_PATH.c_str());
+  }
+}
 
 using json = nlohmann::json;
 
@@ -295,7 +340,7 @@ void Firebase::listenForChanges(const std::string &roomCode, StateCallback cb) {
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, sseCallback);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ctx);
       curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+      setCurlSSL(curl);
 
       // Progress callback to abort when stopListening() is called
       curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
@@ -363,7 +408,7 @@ void Firebase::listenForUserChanges(const std::string &roomCode,
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, userSseCallback);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ctx);
       curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+      setCurlSSL(curl);
 
       // Progress callback to abort when stopListening() is called
       curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
@@ -412,7 +457,7 @@ std::string Firebase::httpPut(const std::string &url, const std::string &body) {
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  setCurlSSL(curl);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
   CURLcode res = curl_easy_perform(curl);
@@ -436,7 +481,7 @@ std::string Firebase::httpGet(const std::string &url) {
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  setCurlSSL(curl);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
   CURLcode res = curl_easy_perform(curl);
@@ -460,7 +505,7 @@ std::string Firebase::httpDelete(const std::string &url) {
   curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+  setCurlSSL(curl);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
   CURLcode res = curl_easy_perform(curl);

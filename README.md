@@ -120,8 +120,12 @@ brew install cmake mpv curl pkg-config git
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-gcc \
           mingw-w64-ucrt-x86_64-mpv mingw-w64-ucrt-x86_64-curl \
-          mingw-w64-ucrt-x86_64-pkg-config git make
+          mingw-w64-ucrt-x86_64-pkg-config mingw-w64-ucrt-x86_64-make \
+          mingw-w64-ucrt-x86_64-ca-certificates mingw-w64-ucrt-x86_64-openssl \
+          mingw-w64-ucrt-x86_64-p11-kit git
 ```
+
+> ⚠️ The `ca-certificates`, `openssl`, and `p11-kit` packages are required for HTTPS/SSL to work correctly with Firebase.
 
 ---
 
@@ -174,6 +178,8 @@ Go to **Realtime Database → Rules** and set:
 
 ## Build
 
+### 🐧 Linux / 🍎 macOS
+
 ```bash
 git clone <your-repo-url>
 cd watchMooi
@@ -183,10 +189,26 @@ cmake ..
 make -j$(nproc)
 ```
 
+### 🪟 Windows (MSYS2 UCRT64)
+
+Open an **MSYS2 UCRT64** terminal:
+
+```bash
+git clone <your-repo-url>
+cd watchMooi
+
+mkdir build && cd build
+export PKG_CONFIG_SYSROOT_DIR=C:/msys64
+cmake -G "MinGW Makefiles" ..
+mingw32-make -j$(nproc)
+```
+
+> **Note:** The `PKG_CONFIG_SYSROOT_DIR` variable is required so that `pkg-config` resolves MSYS2 library paths correctly.
+
 This produces two binaries:
 
-- `watchmooi` — the main app
-- `watchmooi_tests` — the test suite
+- `watchmooi` / `watchmooi.exe` — the main app
+- `watchmooi_tests` / `watchmooi_tests.exe` — the test suite
 
 ---
 
@@ -242,6 +264,16 @@ cd build
 ./watchmooi --room PIZZA --video ~/Videos/movie.mkv --name "Bob"
 ```
 
+### 🪟 Windows (PowerShell)
+
+You must add MSYS2 to your PATH and use Windows-style paths:
+
+```powershell
+$env:Path = "C:\msys64\ucrt64\bin;" + $env:Path
+
+.\watchmooi.exe --room MYROOM --video "C:\Users\You\Videos\movie.mp4" --name "YourName" --firebase-url "https://YOUR-PROJECT-default-rtdb.REGION.firebasedatabase.app"
+```
+
 ### Controls
 
 | Key     | Action                              |
@@ -266,7 +298,8 @@ cd build
 
 ```bash
 cd build
-make watchmooi_tests -j$(nproc)
+make watchmooi_tests -j$(nproc)   # Linux/macOS
+mingw32-make watchmooi_tests -j$(nproc)  # Windows MSYS2
 ./watchmooi_tests
 ```
 
@@ -296,7 +329,7 @@ watchMooi/
 │   ├── sync.h / .cpp     # Glue: local ↔ remote sync
 │   └── main.cpp          # Entry point + CLI
 └── tests/
-    └── tests.cpp         # 48 unit tests (Google Test)
+    └── tests.cpp         # 55 unit tests (Google Test)
 ```
 
 ---
@@ -325,6 +358,27 @@ watchMooi/
 
 - Ensure mpv was installed via Homebrew: `brew install mpv`
 - You may need: `export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"`
+
+### 🪟 Windows: SSL error / "Problem with the SSL CA cert"
+
+If you see `[Firebase] PUT error: Problem with the SSL CA cert (path? access rights?)`, the MSYS2 CA certificate bundle is missing or corrupted. Fix it by running in an **MSYS2 UCRT64** terminal:
+
+```bash
+pacman -S --noconfirm mingw-w64-ucrt-x86_64-ca-certificates \
+                       mingw-w64-ucrt-x86_64-openssl \
+                       mingw-w64-ucrt-x86_64-p11-kit
+```
+
+Verify the fix:
+
+```bash
+curl -s -o /dev/null -w '%{http_code}' 'https://google.com'
+# Should print: 200
+```
+
+### 🪟 Windows: `int64_t` does not name a type
+
+If you get `'int64_t' does not name a type` during build, add `#include <cstdint>` to `src/interfaces.h`.
 
 ---
 

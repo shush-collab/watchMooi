@@ -1,62 +1,62 @@
 [
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -I/home/fln/Documents/watchMooi/build/_deps/json-src/include -std=gnu++17 -o CMakeFiles/watchmooi.dir/src/main.cpp.o -c /home/fln/Documents/watchMooi/src/main.cpp",
-  "file": "/home/fln/Documents/watchMooi/src/main.cpp",
-  "output": "CMakeFiles/watchmooi.dir/src/main.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi.dir\\src\\main.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\src\\main.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/main.cpp",
+  "output": "CMakeFiles/watchmooi.dir/src/main.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -I/home/fln/Documents/watchMooi/build/_deps/json-src/include -std=gnu++17 -o CMakeFiles/watchmooi.dir/src/player.cpp.o -c /home/fln/Documents/watchMooi/src/player.cpp",
-  "file": "/home/fln/Documents/watchMooi/src/player.cpp",
-  "output": "CMakeFiles/watchmooi.dir/src/player.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi.dir\\src\\player.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\src\\player.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/player.cpp",
+  "output": "CMakeFiles/watchmooi.dir/src/player.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -I/home/fln/Documents/watchMooi/build/_deps/json-src/include -std=gnu++17 -o CMakeFiles/watchmooi.dir/src/firebase.cpp.o -c /home/fln/Documents/watchMooi/src/firebase.cpp",
-  "file": "/home/fln/Documents/watchMooi/src/firebase.cpp",
-  "output": "CMakeFiles/watchmooi.dir/src/firebase.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi.dir\\src\\firebase.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\src\\firebase.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/firebase.cpp",
+  "output": "CMakeFiles/watchmooi.dir/src/firebase.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -I/home/fln/Documents/watchMooi/build/_deps/json-src/include -std=gnu++17 -o CMakeFiles/watchmooi.dir/src/sync.cpp.o -c /home/fln/Documents/watchMooi/src/sync.cpp",
-  "file": "/home/fln/Documents/watchMooi/src/sync.cpp",
-  "output": "CMakeFiles/watchmooi.dir/src/sync.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi.dir\\src\\sync.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\src\\sync.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/sync.cpp",
+  "output": "CMakeFiles/watchmooi.dir/src/sync.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=gnu++17 -o CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.o -c /home/fln/Documents/watchMooi/tests/tests.cpp",
-  "file": "/home/fln/Documents/watchMooi/tests/tests.cpp",
-  "output": "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi_tests.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi_tests.dir\\tests\\tests.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\tests\\tests.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/tests/tests.cpp",
+  "output": "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/src -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=gnu++17 -o CMakeFiles/watchmooi_tests.dir/src/sync.cpp.o -c /home/fln/Documents/watchMooi/src/sync.cpp",
-  "file": "/home/fln/Documents/watchMooi/src/sync.cpp",
-  "output": "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/watchmooi_tests.dir/includes_CXX.rsp -std=gnu++17 -o CMakeFiles\\watchmooi_tests.dir\\src\\sync.cpp.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\src\\sync.cpp\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/sync.cpp",
+  "output": "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build/_deps/googletest-build/googlemock",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/include -I/home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
-  "file": "/home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
-  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googlemock",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/gmock.dir/includes_CXX.rsp -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gmock.dir\\src\\gmock-all.cc.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\build\\_deps\\googletest-src\\googlemock\\src\\gmock-all.cc\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build/_deps/googletest-build/googlemock",
-  "command": "/usr/bin/c++  -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
-  "file": "/home/fln/Documents/watchMooi/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
-  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googlemock",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/gmock_main.dir/includes_CXX.rsp -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gmock_main.dir\\src\\gmock_main.cc.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\build\\_deps\\googletest-src\\googlemock\\src\\gmock_main.cc\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build/_deps/googletest-build/googletest",
-  "command": "/usr/bin/c++  -I/home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -I/home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/src/gtest-all.cc",
-  "file": "/home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/src/gtest-all.cc",
-  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googletest",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/gtest.dir/includes_CXX.rsp -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gtest.dir\\src\\gtest-all.cc.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\build\\_deps\\googletest-src\\googletest\\src\\gtest-all.cc\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
 },
 {
-  "directory": "/home/fln/Documents/watchMooi/build/_deps/googletest-build/googletest",
-  "command": "/usr/bin/c++  -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/include -isystem /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/src/gtest_main.cc",
-  "file": "/home/fln/Documents/watchMooi/build/_deps/googletest-src/googletest/src/gtest_main.cc",
-  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+  "directory": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googletest",
+  "command": "C:\\msys64\\ucrt64\\bin\\c++.exe  @CMakeFiles/gtest_main.dir/includes_CXX.rsp -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles\\gtest_main.dir\\src\\gtest_main.cc.obj -c \"C:\\Users\\Priya\\OneDrive\\Documents\\Desktop\\code&work\\watchMooi\\build\\_deps\\googletest-src\\googletest\\src\\gtest_main.cc\"",
+  "file": "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj"
 }
 ]

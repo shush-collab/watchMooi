@@ -1,0 +1,4 @@
+C:\Users\Priya\OneDrive\Documents\Desktop\code&work\watchMooi\src\firebase.h:7:10: fatal error: nlohmann/json.hpp: No such file or directory
+mingw32-make[2]: *** [CMakeFiles\watchmooi.dir\build.make:79: CMakeFiles/watchmooi.dir/src/main.cpp.obj] Error 1
+mingw32-make[1]: *** [CMakeFiles\Makefile2:181: CMakeFiles/watchmooi.dir/all] Error 2
+mingw32-make: *** [Makefile:145: all] Error 2

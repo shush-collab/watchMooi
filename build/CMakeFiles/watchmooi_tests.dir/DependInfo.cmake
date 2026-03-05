@@ -8,9 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/fln/Documents/watchMooi/src/sync.cpp" "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.o" "gcc" "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.o.d"
-  "/home/fln/Documents/watchMooi/tests/tests.cpp" "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.o" "gcc" "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.o.d"
-  "" "watchmooi_tests" "gcc" "CMakeFiles/watchmooi_tests.dir/link.d"
+  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/sync.cpp" "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.obj" "gcc" "CMakeFiles/watchmooi_tests.dir/src/sync.cpp.obj.d"
+  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/tests/tests.cpp" "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.obj" "gcc" "CMakeFiles/watchmooi_tests.dir/tests/tests.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
