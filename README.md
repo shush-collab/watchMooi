@@ -137,10 +137,20 @@ The app uses **Firebase Realtime Database** as the sync server. No backend code 
 1. In the sidebar: **Build → Realtime Database**
 2. Click **Create Database**
 3. Choose a region → **Start in test mode**
-4. Your database URL will appear, e.g.:
+4. Your database URL will appear. **Copy it exactly** — the format depends on your region:
+
+   | Region        | URL format                                                      |
+   | ------------- | --------------------------------------------------------------- |
+   | US (default)  | `https://YOUR-PROJECT-default-rtdb.firebaseio.com`              |
+   | Other regions | `https://YOUR-PROJECT-default-rtdb.REGION.firebasedatabase.app` |
+
+   For example, Asia Southeast 1:
+
    ```
-   https://watchmooi-default-rtdb.firebaseio.com
+   https://watchmooi-default-rtdb.asia-southeast1.firebasedatabase.app
    ```
+
+> ⚠️ **Using the wrong URL format is the #1 setup mistake.** If you chose a non-US region, you **must** use the `.firebasedatabase.app` domain, not `.firebaseio.com`.
 
 ### 3. Set security rules (for development)
 
@@ -182,14 +192,16 @@ This produces two binaries:
 Edit `watchmooi.conf` in the project root:
 
 ```
-firebase_url=https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com
+firebase_url=https://YOUR-PROJECT-default-rtdb.REGION.firebasedatabase.app
 ```
 
 Or pass it directly via CLI:
 
 ```bash
-./watchmooi --firebase-url https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com
+./watchmooi --firebase-url https://YOUR-PROJECT-default-rtdb.REGION.firebasedatabase.app
 ```
+
+> **Note:** Copy the `watchmooi.conf` into the `build/` directory, or run the binary from the project root.
 
 ---
 
@@ -285,9 +297,11 @@ watchMooi/
 
 ### "Failed to join room. Check your Firebase URL and network."
 
-- Verify your `firebase_url` in `watchmooi.conf` is correct
+- Verify your `firebase_url` in `watchmooi.conf` matches your Firebase Console URL **exactly**
+- If your DB is in a non-US region, make sure you're using `.firebasedatabase.app`, not `.firebaseio.com`
 - Check that your Firebase RTDB rules allow read/write
 - Make sure you have internet connectivity
+- Make sure `watchmooi.conf` is in the directory you run the binary from (e.g., `build/`)
 
 ### mpv window doesn't open
 
