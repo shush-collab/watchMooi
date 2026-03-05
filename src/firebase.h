@@ -4,8 +4,8 @@
 
 #include <atomic>
 #include <functional>
+#include <map>
 #include <nlohmann/json.hpp>
-#include <set>
 #include <string>
 #include <thread>
 
@@ -26,6 +26,8 @@ public:
 
   // Register this user in the room.
   bool joinRoom(const std::string &roomCode, const std::string &userId);
+  bool joinRoom(const std::string &roomCode, const std::string &userId,
+                const std::string &displayName);
 
   // Remove this user from the room.
   bool leaveRoom(const std::string &roomCode, const std::string &userId);
@@ -52,7 +54,7 @@ private:
   std::thread listenerThread_;
   std::thread userListenerThread_;
   std::atomic<bool> listening_{false};
-  std::set<std::string> knownUsers_; // tracked for join/leave detection
+  std::map<std::string, std::string> knownUsers_; // userId -> displayName
 
   // Helpers
   std::string httpPut(const std::string &url, const std::string &body);

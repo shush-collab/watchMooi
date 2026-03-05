@@ -213,7 +213,7 @@ Or pass it directly via CLI:
 ### Basic usage
 
 ```bash
-./watchmooi --room MYROOM --video /path/to/movie.mp4
+./watchmooi --room MYROOM --video /path/to/movie.mp4 --name "Faizan"
 ```
 
 ### Interactive mode (prompts for missing args)
@@ -223,6 +223,7 @@ Or pass it directly via CLI:
 # Firebase Realtime Database URL: https://...
 # Room code: MYROOM
 # Video file path: /home/user/movie.mp4
+# Your name (press Enter to skip): Faizan
 ```
 
 ### Two-user test (same machine, two terminals)
@@ -231,14 +232,14 @@ Or pass it directly via CLI:
 
 ```bash
 cd build
-./watchmooi --room PIZZA --video ~/Videos/movie.mkv
+./watchmooi --room PIZZA --video ~/Videos/movie.mkv --name "Alice"
 ```
 
 **Terminal 2:**
 
 ```bash
 cd build
-./watchmooi --room PIZZA --video ~/Videos/movie.mkv
+./watchmooi --room PIZZA --video ~/Videos/movie.mkv --name "Bob"
 ```
 
 ### Controls

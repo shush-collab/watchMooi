@@ -102,7 +102,7 @@ public:
     joinLog_.push_back({roomCode, userId});
     // Notify user listeners
     if (userListeners_.count(roomCode)) {
-      userListeners_[roomCode]({userId, true});
+      userListeners_[roomCode]({userId, "", true});
     }
     return true;
   }
@@ -115,7 +115,7 @@ public:
     users.erase(std::remove(users.begin(), users.end(), userId), users.end());
     // Notify user listeners
     if (userListeners_.count(roomCode)) {
-      userListeners_[roomCode]({userId, false});
+      userListeners_[roomCode]({userId, "", false});
     }
     return true;
   }
@@ -1036,7 +1036,7 @@ TEST_F(UserPresenceTest, OtherUserLeavePausesPlayback) {
   player_->playing_ = true;
 
   // Simulate partner leaving
-  sync_->handleUserEvent({"partner", false});
+  sync_->handleUserEvent({"partner", "", false});
 
   // Playback should be paused
   EXPECT_FALSE(player_->playing_);
@@ -1048,7 +1048,7 @@ TEST_F(UserPresenceTest, OtherUserLeaveWhilePausedDoesNotCrash) {
   player_->playing_ = false;
 
   // Should not crash or do anything weird
-  sync_->handleUserEvent({"partner", false});
+  sync_->handleUserEvent({"partner", "", false});
 
   EXPECT_FALSE(player_->playing_);
 }
@@ -1057,7 +1057,7 @@ TEST_F(UserPresenceTest, OtherUserJoinDoesNotAffectPlayback) {
   player_->playing_ = false;
   player_->actionLog_.clear();
 
-  sync_->handleUserEvent({"partner", true});
+  sync_->handleUserEvent({"partner", "", true});
 
   // No playback actions should have occurred
   EXPECT_TRUE(player_->actionLog_.empty());
@@ -1069,7 +1069,7 @@ TEST_F(UserPresenceTest, OwnEventsAreIgnored) {
   player_->actionLog_.clear();
 
   // Our own leave event — should be ignored
-  sync_->handleUserEvent({"me", false});
+  sync_->handleUserEvent({"me", "", false});
 
   EXPECT_TRUE(player_->playing_); // still playing
   EXPECT_TRUE(player_->actionLog_.empty());
@@ -1105,20 +1105,20 @@ TEST(UserPresenceStandaloneTest, MultipleJoinLeaveSequence) {
   sync.start();
 
   // user2 joins
-  sync.handleUserEvent({"user2", true});
+  sync.handleUserEvent({"user2", "", true});
   // user3 joins
-  sync.handleUserEvent({"user3", true});
+  sync.handleUserEvent({"user3", "", true});
 
   // user2 leaves while playing
   player.playing_ = true;
-  sync.handleUserEvent({"user2", false});
+  sync.handleUserEvent({"user2", "", false});
   EXPECT_FALSE(player.playing_); // paused
 
   // user3 is still here, resume
   player.playing_ = true;
 
   // user3 leaves
-  sync.handleUserEvent({"user3", false});
+  sync.handleUserEvent({"user3", "", false});
   EXPECT_FALSE(player.playing_); // paused again
 }
 

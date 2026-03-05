@@ -109,7 +109,7 @@ static size_t sseCallback(char *ptr, size_t size, size_t nmemb,
 struct UserSSEContext {
   Firebase::UserCallback callback;
   std::atomic<bool> *listening;
-  std::set<std::string> *knownUsers;
+  std::map<std::string, std::string> *knownUsers;
   std::string buffer;
 };
 
@@ -144,28 +144,31 @@ static size_t userSseCallback(char *ptr, size_t size, size_t nmemb,
 
         if (data.is_null()) {
           // All users removed — everyone left
-          for (const auto &uid : *ctx->knownUsers) {
-            ctx->callback({uid, false});
+          for (const auto &[uid, name] : *ctx->knownUsers) {
+            ctx->callback({uid, name, false});
           }
           ctx->knownUsers->clear();
         } else if (data.is_object()) {
           // Full user list — diff against known users
-          std::set<std::string> currentUsers;
+          std::map<std::string, std::string> currentUsers;
           for (auto &[uid, val] : data.items()) {
-            currentUsers.insert(uid);
+            std::string name;
+            if (val.is_object() && val.contains("name"))
+              name = val["name"].get<std::string>();
+            currentUsers[uid] = name;
           }
 
           // Detect joins
-          for (const auto &uid : currentUsers) {
+          for (const auto &[uid, name] : currentUsers) {
             if (ctx->knownUsers->find(uid) == ctx->knownUsers->end()) {
-              ctx->callback({uid, true});
+              ctx->callback({uid, name, true});
             }
           }
 
           // Detect leaves
-          for (const auto &uid : *ctx->knownUsers) {
+          for (const auto &[uid, name] : *ctx->knownUsers) {
             if (currentUsers.find(uid) == currentUsers.end()) {
-              ctx->callback({uid, false});
+              ctx->callback({uid, name, false});
             }
           }
 
@@ -197,11 +200,18 @@ Firebase::~Firebase() {
 
 bool Firebase::joinRoom(const std::string &roomCode,
                         const std::string &userId) {
+  return joinRoom(roomCode, userId, "");
+}
+
+bool Firebase::joinRoom(const std::string &roomCode, const std::string &userId,
+                        const std::string &displayName) {
   auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
                  std::chrono::system_clock::now().time_since_epoch())
                  .count();
 
   json body = {{"joinedAt", now}};
+  if (!displayName.empty())
+    body["name"] = displayName;
 
   std::string url =
       dbUrl_ + "/rooms/" + roomCode + "/users/" + userId + ".json";
@@ -212,8 +222,8 @@ bool Firebase::joinRoom(const std::string &roomCode,
     return false;
   }
 
-  std::cout << "[Firebase] Joined room " << roomCode << " as " << userId
-            << "\n";
+  std::string label = displayName.empty() ? userId : displayName;
+  std::cout << "[Firebase] Joined room " << roomCode << " as " << label << "\n";
   return true;
 }
 
@@ -320,7 +330,10 @@ void Firebase::listenForUserChanges(const std::string &roomCode,
       json j = json::parse(initResp);
       if (j.is_object()) {
         for (auto &[uid, val] : j.items()) {
-          knownUsers_.insert(uid);
+          std::string name;
+          if (val.is_object() && val.contains("name"))
+            name = val["name"].get<std::string>();
+          knownUsers_[uid] = name;
         }
       }
     } catch (...) {

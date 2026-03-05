@@ -97,14 +97,17 @@ void Sync::handleUserEvent(const UserEvent &event) {
   if (event.userId == userId_)
     return; // ignore our own events
 
+  std::string label =
+      event.displayName.empty() ? event.userId : event.displayName;
+
   if (event.joined) {
-    std::cout << "\n🟢 " << event.userId << " joined the room\n";
+    std::cout << "\n🟢 " << label << " joined the room\n";
   } else {
-    std::cout << "\n🔴 " << event.userId << " left the room\n";
+    std::cout << "\n🔴 " << label << " left the room\n";
 
     // Pause playback when the other user leaves
     if (player_.isPlaying()) {
-      std::cout << "   ⏸  Pausing playback — your partner left.\n";
+      std::cout << "   ⏸  Pausing playback — " << label << " left.\n";
       player_.suppressNextEvent();
       player_.pause();
     }

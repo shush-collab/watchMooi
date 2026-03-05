@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include <random>
-#include <sstream>
 #include <string>
 
 // ── Config ──────────────────────────────────────────────────────────────────
@@ -60,6 +59,7 @@ int main(int argc, char *argv[]) {
   std::string roomCode;
   std::string videoPath;
   std::string firebaseUrl;
+  std::string displayName;
 
   // Parse CLI args
   for (int i = 1; i < argc; ++i) {
@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
       videoPath = argv[++i];
     } else if (arg == "--firebase-url" && i + 1 < argc) {
       firebaseUrl = argv[++i];
+    } else if (arg == "--name" && i + 1 < argc) {
+      displayName = argv[++i];
     } else if (arg == "--help" || arg == "-h") {
       printUsage(argv[0]);
       return 0;
@@ -96,19 +98,27 @@ int main(int argc, char *argv[]) {
   }
 
   if (firebaseUrl.empty() || roomCode.empty() || videoPath.empty()) {
-    std::cerr << "Error: All fields are required.\n";
+    std::cerr
+        << "Error: Firebase URL, room code, and video path are required.\n";
     printUsage(argv[0]);
     return 1;
   }
 
+  if (displayName.empty()) {
+    std::cout << "Your name (press Enter to skip): ";
+    std::getline(std::cin, displayName);
+  }
+
   std::string userId = generateUserId();
+
+  std::string banner = displayName.empty() ? userId : displayName;
 
   std::cout << "╔══════════════════════════════════════╗\n"
             << "║          watchMooi MVP v0.1          ║\n"
             << "╠══════════════════════════════════════╣\n"
             << "║  Room:  " << roomCode
             << std::string(29 - roomCode.size(), ' ') << "║\n"
-            << "║  User:  " << userId << std::string(29 - userId.size(), ' ')
+            << "║  Name:  " << banner << std::string(29 - banner.size(), ' ')
             << "║\n"
             << "╠══════════════════════════════════════╣\n"
             << "║  Controls:                           ║\n"
@@ -123,7 +133,7 @@ int main(int argc, char *argv[]) {
     Sync sync(player, firebase, roomCode, userId);
 
     // Join the room
-    if (!firebase.joinRoom(roomCode, userId)) {
+    if (!firebase.joinRoom(roomCode, userId, displayName)) {
       std::cerr
           << "Failed to join room. Check your Firebase URL and network.\n";
       return 1;

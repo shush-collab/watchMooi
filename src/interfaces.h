@@ -20,7 +20,8 @@ struct PlaybackState {
 
 struct UserEvent {
   std::string userId;
-  bool joined; // true = joined, false = left
+  std::string displayName; // human-readable name (may be empty)
+  bool joined;             // true = joined, false = left
 };
 
 // ── Abstract interfaces for testability ─────────────────────────────────────
