@@ -8,10 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/firebase.cpp" "CMakeFiles/watchmooi.dir/src/firebase.cpp.obj" "gcc" "CMakeFiles/watchmooi.dir/src/firebase.cpp.obj.d"
-  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/main.cpp" "CMakeFiles/watchmooi.dir/src/main.cpp.obj" "gcc" "CMakeFiles/watchmooi.dir/src/main.cpp.obj.d"
-  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/player.cpp" "CMakeFiles/watchmooi.dir/src/player.cpp.obj" "gcc" "CMakeFiles/watchmooi.dir/src/player.cpp.obj.d"
-  "C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/src/sync.cpp" "CMakeFiles/watchmooi.dir/src/sync.cpp.obj" "gcc" "CMakeFiles/watchmooi.dir/src/sync.cpp.obj.d"
+  "/home/fln/Documents/watchMooi/src/firebase.cpp" "CMakeFiles/watchmooi.dir/src/firebase.cpp.o" "gcc" "CMakeFiles/watchmooi.dir/src/firebase.cpp.o.d"
+  "/home/fln/Documents/watchMooi/src/main.cpp" "CMakeFiles/watchmooi.dir/src/main.cpp.o" "gcc" "CMakeFiles/watchmooi.dir/src/main.cpp.o.d"
+  "/home/fln/Documents/watchMooi/src/player.cpp" "CMakeFiles/watchmooi.dir/src/player.cpp.o" "gcc" "CMakeFiles/watchmooi.dir/src/player.cpp.o.d"
+  "/home/fln/Documents/watchMooi/src/sync.cpp" "CMakeFiles/watchmooi.dir/src/sync.cpp.o" "gcc" "CMakeFiles/watchmooi.dir/src/sync.cpp.o.d"
+  "" "watchmooi" "gcc" "CMakeFiles/watchmooi.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

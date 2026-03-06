@@ -96,14 +96,12 @@ public:
 
 class MockFirebase : public IFirebase {
 public:
-  bool joinRoom(const std::string &roomCode,
-                const std::string &userId) override {
+  bool joinRoom(const std::string &roomCode, const std::string &userId,
+                const std::string & /*displayName*/ = "") override {
     rooms_[roomCode].push_back(userId);
     joinLog_.push_back({roomCode, userId});
-    // Notify user listeners
-    if (userListeners_.count(roomCode)) {
+    if (userListeners_.count(roomCode))
       userListeners_[roomCode]({userId, "", true});
-    }
     return true;
   }
 

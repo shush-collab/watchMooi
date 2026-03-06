@@ -11,3 +11,4 @@ compile_commands.json
 # OS
 .DS_Store
 .cache/
+build_errors.txt

@@ -1,0 +1,8 @@
+build/
+.git/
+.cache/
+.vscode/
+.idea/
+*.swp
+*.swo
+build_errors.txt

@@ -7,22 +7,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # ── Dependencies ─────────────────────────────────────────────────────────────
 
-# nlohmann/json (header-only, fetched automatically)
 include(FetchContent)
 FetchContent_Declare(
     json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
     GIT_TAG        v3.11.3
 )
-
-# Google Test (for unit tests)
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG        v1.14.0
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
 FetchContent_MakeAvailable(json googletest)
 
 # libmpv
@@ -34,7 +30,27 @@ find_package(CURL REQUIRED)
 
 # pthreads
 find_package(Threads REQUIRED)
-# ── Sources ──────────────────────────────────────────────────────────────────
+
+# ── std::filesystem link (older GCC/Clang may need -lstdc++fs) ───────────────
+
+set(STDFS_LIB "")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+  set(STDFS_LIB stdc++fs)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+  set(STDFS_LIB c++fs)
+endif()
+
+# ── macOS Homebrew hints ─────────────────────────────────────────────────────
+
+if(APPLE)
+  # Homebrew on Apple Silicon
+  list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
+  # Homebrew on Intel
+  list(APPEND CMAKE_PREFIX_PATH "/usr/local")
+endif()
+
+# ── Main binary ──────────────────────────────────────────────────────────────
+
 add_executable(watchmooi
     src/main.cpp
     src/player.cpp
@@ -49,11 +65,11 @@ target_link_libraries(watchmooi PRIVATE
     CURL::libcurl
     nlohmann_json::nlohmann_json
     Threads::Threads
+    ${STDFS_LIB}
 )
 
 # ── Tests ────────────────────────────────────────────────────────────────────
-# Tests use mock Player/Firebase, so they don't need libmpv or libcurl.
-# Only sync.cpp is linked because tests exercise Sync logic with mocks.
+# Tests use mock Player/Firebase — only sync.cpp is linked.
 
 enable_testing()
 
@@ -67,8 +83,8 @@ target_include_directories(watchmooi_tests PRIVATE src)
 target_link_libraries(watchmooi_tests PRIVATE
     GTest::gtest_main
     Threads::Threads
+    ${STDFS_LIB}
 )
 
 include(GoogleTest)
 gtest_discover_tests(watchmooi_tests)
-

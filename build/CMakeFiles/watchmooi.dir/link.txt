@@ -1,3 +1,1 @@
-C:\msys64\ucrt64\bin\cmake.exe -E rm -f CMakeFiles\watchmooi.dir/objects.a
-C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\watchmooi.dir/objects.a @CMakeFiles\watchmooi.dir\objects1.rsp
-C:\msys64\ucrt64\bin\c++.exe -Wl,--whole-archive CMakeFiles\watchmooi.dir/objects.a -Wl,--no-whole-archive -o watchmooi.exe -Wl,--out-implib,libwatchmooi.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\watchmooi.dir\linkLibs.rsp
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/watchmooi.dir/link.d CMakeFiles/watchmooi.dir/src/main.cpp.o CMakeFiles/watchmooi.dir/src/player.cpp.o CMakeFiles/watchmooi.dir/src/firebase.cpp.o CMakeFiles/watchmooi.dir/src/sync.cpp.o -o watchmooi  /usr/lib/libcurl.so /usr/lib/libmpv.so /usr/lib/libcurl.so

@@ -1,11 +1,11 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/cmake_install.cmake",
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/json-build/cmake_install.cmake",
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/cmake_install.cmake",
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googlemock/cmake_install.cmake",
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-build/googletest/cmake_install.cmake"
+		"/home/fln/Documents/watchMooi/build/cmake_install.cmake",
+		"/home/fln/Documents/watchMooi/build/_deps/json-build/cmake_install.cmake",
+		"/home/fln/Documents/watchMooi/build/_deps/googletest-build/cmake_install.cmake",
+		"/home/fln/Documents/watchMooi/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"/home/fln/Documents/watchMooi/build/_deps/googletest-build/googletest/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

@@ -315,11 +315,32 @@ The 3 disabled tests are placeholders for future features (WebRTC, chat, forward
 
 ---
 
+## Docker (Build & Test)
+
+A multi-stage `Dockerfile` is included for reproducible builds and test runs.
+
+> **Note:** The main binary requires a display (libmpv). Docker can only build and run the **test suite**.
+
+### Run tests in Docker
+
+```bash
+docker build --target test -t watchmooi-test .
+```
+
+### Build only (no tests)
+
+```bash
+docker build --target builder -t watchmooi-builder .
+```
+
+---
+
 ## Project Structure
 
 ```
 watchMooi/
 ├── CMakeLists.txt        # Build config
+├── Dockerfile            # Docker build + test
 ├── README.md             # This file
 ├── watchmooi.conf        # Firebase URL config
 ├── src/

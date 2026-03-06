@@ -4,17 +4,13 @@
 #include <functional>
 #include <string>
 
-// ── PlaybackState (also used standalone) ────────────────────────────────────
-// Defined here so interfaces.h can reference it without circular deps.
+// ── PlaybackState ───────────────────────────────────────────────────────────
 
 struct PlaybackState {
   bool isPlaying = false;
   double positionSec = 0.0;
   std::string updatedBy;
   int64_t updatedAt = 0; // unix ms
-
-  // JSON helpers are implemented in firebase.cpp
-  // Declared here so tests can use them without pulling in firebase.h
 };
 
 // ── User presence event ─────────────────────────────────────────────────────
@@ -51,8 +47,8 @@ public:
 
   virtual ~IFirebase() = default;
 
-  virtual bool joinRoom(const std::string &roomCode,
-                        const std::string &userId) = 0;
+  virtual bool joinRoom(const std::string &roomCode, const std::string &userId,
+                        const std::string &displayName = "") = 0;
   virtual bool leaveRoom(const std::string &roomCode,
                          const std::string &userId) = 0;
   virtual bool writePlaybackState(const std::string &roomCode,

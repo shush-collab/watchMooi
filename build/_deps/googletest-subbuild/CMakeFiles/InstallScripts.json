@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/Priya/OneDrive/Documents/Desktop/code&work/watchMooi/build/_deps/googletest-subbuild/cmake_install.cmake"
+		"/home/fln/Documents/watchMooi/build/_deps/googletest-subbuild/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

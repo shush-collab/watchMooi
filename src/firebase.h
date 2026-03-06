@@ -3,7 +3,6 @@
 #include "interfaces.h"
 
 #include <atomic>
-#include <functional>
 #include <map>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -13,41 +12,23 @@
 nlohmann::json playbackStateToJson(const PlaybackState &s);
 PlaybackState playbackStateFromJson(const nlohmann::json &j);
 
-// Firebase Realtime Database client using REST + SSE (Server-Sent Events).
+// Firebase Realtime Database client using REST + SSE.
 class Firebase : public IFirebase {
 public:
-  using StateCallback = std::function<void(const PlaybackState &)>;
-  using UserCallback = std::function<void(const UserEvent &)>;
-
-  // dbUrl: e.g.
-  // "https://watchmooi-default-rtdb.asia-southeast1.firebasedatabase.app"
   explicit Firebase(const std::string &dbUrl);
   ~Firebase();
 
-  // Register this user in the room.
-  bool joinRoom(const std::string &roomCode, const std::string &userId);
   bool joinRoom(const std::string &roomCode, const std::string &userId,
-                const std::string &displayName);
-
-  // Remove this user from the room.
-  bool leaveRoom(const std::string &roomCode, const std::string &userId);
-
-  // Write playback state to the room.
+                const std::string &displayName = "") override;
+  bool leaveRoom(const std::string &roomCode,
+                 const std::string &userId) override;
   bool writePlaybackState(const std::string &roomCode,
-                          const PlaybackState &state);
-
-  // Read the current playback state (one-shot).
-  PlaybackState readPlaybackState(const std::string &roomCode);
-
-  // Start listening for playback state changes via SSE.
-  // Runs in a background thread. Calls `cb` on every update.
-  void listenForChanges(const std::string &roomCode, StateCallback cb);
-
-  // Start listening for user join/leave events via SSE.
-  void listenForUserChanges(const std::string &roomCode, UserCallback cb);
-
-  // Stop all SSE listeners.
-  void stopListening();
+                          const PlaybackState &state) override;
+  PlaybackState readPlaybackState(const std::string &roomCode) override;
+  void listenForChanges(const std::string &roomCode, StateCallback cb) override;
+  void listenForUserChanges(const std::string &roomCode,
+                            UserCallback cb) override;
+  void stopListening() override;
 
 private:
   std::string dbUrl_;
@@ -56,8 +37,6 @@ private:
   std::atomic<bool> listening_{false};
   std::map<std::string, std::string> knownUsers_; // userId -> displayName
 
-  // Helpers
-  std::string httpPut(const std::string &url, const std::string &body);
-  std::string httpGet(const std::string &url);
-  std::string httpDelete(const std::string &url);
+  std::string httpRequest(const std::string &url, const std::string &method,
+                          const std::string &body = "");
 };
