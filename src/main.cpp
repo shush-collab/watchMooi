@@ -104,11 +104,6 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  if (displayName.empty()) {
-    std::cout << "Your name (press Enter to skip): ";
-    std::getline(std::cin, displayName);
-  }
-
   std::string userId = generateUserId();
 
   std::string banner = displayName.empty() ? userId : displayName;
