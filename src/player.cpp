@@ -74,6 +74,12 @@ double Player::getPosition() const {
   return pos;
 }
 
+double Player::getDuration() const {
+  double dur = 0.0;
+  mpv_get_property(mpv_, "duration", MPV_FORMAT_DOUBLE, &dur);
+  return dur;
+}
+
 void Player::onPlaybackToggle(PlaybackCallback cb) {
   std::lock_guard<std::mutex> lock(mutex_);
   callback_ = std::move(cb);

@@ -2,10 +2,14 @@
 #include "player.h"
 #include "sync.h"
 
+#include <chrono>
+#include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <random>
 #include <string>
+#include <thread>
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -110,6 +114,37 @@ int main(int argc, char *argv[]) {
       std::cerr << "Failed to load video: " << videoPath << "\n";
       return 1;
     }
+
+    // Wait briefly for mpv to determine duration
+    for (int i = 0; i < 20 && player.getDuration() <= 0.0; ++i)
+      std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
+    // Video metadata validation
+    std::string filename = std::filesystem::path(videoPath).filename().string();
+    double duration = player.getDuration();
+
+    VideoMeta existing = firebase.readVideoMeta(roomCode);
+
+    if (!existing.filename.empty()) {
+      // Room already has video metadata — compare
+      bool nameMismatch = existing.filename != filename;
+      bool durMismatch = duration > 0.0 && existing.durationSec > 0.0 &&
+                         std::abs(existing.durationSec - duration) > 2.0;
+
+      if (nameMismatch || durMismatch) {
+        std::cerr << "\n⚠  Video mismatch detected!\n";
+        if (nameMismatch)
+          std::cerr << "   Room expects:  \"" << existing.filename
+                    << "\"\n   You loaded:    \"" << filename << "\"\n";
+        if (durMismatch)
+          std::cerr << "   Room duration: " << existing.durationSec
+                    << "s\n   Your duration: " << duration << "s\n";
+        std::cerr << "   Playback may be out of sync.\n\n";
+      }
+    }
+
+    // Write our metadata (last writer wins — room reflects current video)
+    firebase.writeVideoMeta(roomCode, {filename, duration});
 
     sync.start();
     player.runLoop();

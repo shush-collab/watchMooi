@@ -28,6 +28,9 @@ public:
   void listenForChanges(const std::string &roomCode, StateCallback cb) override;
   void listenForUserChanges(const std::string &roomCode,
                             UserCallback cb) override;
+  bool writeVideoMeta(const std::string &roomCode,
+                      const VideoMeta &meta) override;
+  VideoMeta readVideoMeta(const std::string &roomCode) override;
   void stopListening() override;
 
 private:

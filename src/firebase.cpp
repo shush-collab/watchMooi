@@ -159,6 +159,7 @@ struct UserSSEContext {
   std::atomic<bool> *listening;
   std::map<std::string, std::string> *knownUsers;
   std::string buffer;
+  bool firstEvent = true; // skip initial snapshot to avoid false joins/leaves
 };
 
 static size_t userSseCallback(char *ptr, size_t size, size_t nmemb, void *ud) {
@@ -170,25 +171,42 @@ static size_t userSseCallback(char *ptr, size_t size, size_t nmemb, void *ud) {
 
   parseSseLines(ctx->buffer, [&](const json &data) {
     if (data.is_null()) {
-      for (const auto &[uid, name] : *ctx->knownUsers)
-        ctx->callback({uid, name, false});
-      ctx->knownUsers->clear();
-    } else if (data.is_object()) {
-      std::map<std::string, std::string> current;
-      for (auto &[uid, val] : data.items()) {
-        std::string name;
-        if (val.is_object() && val.contains("name"))
-          name = val["name"].get<std::string>();
-        current[uid] = name;
-      }
-      for (const auto &[uid, name] : current)
-        if (ctx->knownUsers->find(uid) == ctx->knownUsers->end())
-          ctx->callback({uid, name, true});
-      for (const auto &[uid, name] : *ctx->knownUsers)
-        if (current.find(uid) == current.end())
+      // All users deleted — fire leave for everyone we knew about
+      if (!ctx->firstEvent) {
+        for (const auto &[uid, name] : *ctx->knownUsers)
           ctx->callback({uid, name, false});
-      *ctx->knownUsers = current;
+      }
+      ctx->knownUsers->clear();
+      ctx->firstEvent = false;
+      return;
     }
+    if (!data.is_object())
+      return;
+
+    // Build current user map from SSE data
+    std::map<std::string, std::string> current;
+    for (auto &[uid, val] : data.items()) {
+      std::string name;
+      if (val.is_object() && val.contains("name"))
+        name = val["name"].get<std::string>();
+      current[uid] = name;
+    }
+
+    if (ctx->firstEvent) {
+      // First event is the initial snapshot — just sync, no callbacks
+      *ctx->knownUsers = current;
+      ctx->firstEvent = false;
+      return;
+    }
+
+    // Diff: new users = joined, missing users = left
+    for (const auto &[uid, name] : current)
+      if (ctx->knownUsers->find(uid) == ctx->knownUsers->end())
+        ctx->callback({uid, name, true});
+    for (const auto &[uid, name] : *ctx->knownUsers)
+      if (current.find(uid) == current.end())
+        ctx->callback({uid, name, false});
+    *ctx->knownUsers = current;
   });
   return bytes;
 }
@@ -297,6 +315,31 @@ void Firebase::listenForUserChanges(const std::string &roomCode,
     UserSSEContext ctx{cb, &listening_, &knownUsers_, {}};
     runSSELoop(url, listening_, userSseCallback, &ctx);
   });
+}
+
+bool Firebase::writeVideoMeta(const std::string &roomCode,
+                              const VideoMeta &meta) {
+  json body = {{"filename", meta.filename}, {"durationSec", meta.durationSec}};
+  std::string url = dbUrl_ + "/rooms/" + roomCode + "/videoMeta.json";
+  return !httpRequest(url, "PUT", body.dump()).empty();
+}
+
+VideoMeta Firebase::readVideoMeta(const std::string &roomCode) {
+  std::string resp =
+      httpRequest(dbUrl_ + "/rooms/" + roomCode + "/videoMeta.json", "GET");
+  if (resp.empty() || resp == "null")
+    return {};
+  try {
+    json j = json::parse(resp);
+    VideoMeta m;
+    if (j.contains("filename"))
+      m.filename = j["filename"].get<std::string>();
+    if (j.contains("durationSec"))
+      m.durationSec = j["durationSec"].get<double>();
+    return m;
+  } catch (...) {
+    return {};
+  }
 }
 
 void Firebase::stopListening() {

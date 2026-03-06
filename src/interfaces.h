@@ -13,6 +13,13 @@ struct PlaybackState {
   int64_t updatedAt = 0; // unix ms
 };
 
+// ── Video metadata (for mismatch detection) ─────────────────────────────────
+
+struct VideoMeta {
+  std::string filename;     // basename of the video file
+  double durationSec = 0.0; // total length in seconds
+};
+
 // ── User presence event ─────────────────────────────────────────────────────
 
 struct UserEvent {
@@ -36,6 +43,7 @@ public:
   virtual void seekTo(double positionSec) = 0;
   virtual bool isPlaying() const = 0;
   virtual double getPosition() const = 0;
+  virtual double getDuration() const = 0;
   virtual void onPlaybackToggle(PlaybackCallback cb) = 0;
   virtual void suppressNextEvent() = 0;
 };
@@ -58,5 +66,8 @@ public:
                                 StateCallback cb) = 0;
   virtual void listenForUserChanges(const std::string &roomCode,
                                     UserCallback cb) = 0;
+  virtual bool writeVideoMeta(const std::string &roomCode,
+                              const VideoMeta &meta) = 0;
+  virtual VideoMeta readVideoMeta(const std::string &roomCode) = 0;
   virtual void stopListening() = 0;
 };

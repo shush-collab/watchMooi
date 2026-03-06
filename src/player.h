@@ -17,6 +17,7 @@ public:
   void seekTo(double positionSec) override;
   bool isPlaying() const override;
   double getPosition() const override;
+  double getDuration() const override;
   void onPlaybackToggle(PlaybackCallback cb) override;
   void suppressNextEvent() override;
 
